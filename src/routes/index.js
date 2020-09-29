@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '@/views/mainpage'
 import SingIn from "@/views/SingIn";
 import SingUp from "@/views/SingUp";
-
+import Test from "@/views/test"
 Vue.use(VueRouter)
 
 const routes=[
@@ -22,6 +22,11 @@ const routes=[
         path: '/singup',
         name: 'CreateUser',
         component: SingUp
+    },
+    {
+        path: '/test',
+        name: 'test',
+        component: Test
     }
 ]
 

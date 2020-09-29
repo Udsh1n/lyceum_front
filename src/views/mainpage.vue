@@ -7,7 +7,7 @@
         <img src="@/assets/leftpoints.svg" alt="">
       </div>
       <div class="col-md-6 leftside startButton">
-        <div class="start">
+        <div class="start" v-on:click="start">
           <span>Старт</span>
         </div>
       </div>
@@ -64,11 +64,18 @@
 
 <script>
 
+import router from "@/routes";
+
 export default {
 name: "mainpage",
   components:{
 
   },
+  methods:{
+    start(){
+      router.push('/test')
+    }
+  }
 }
 </script>
 

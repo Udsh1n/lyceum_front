@@ -10,7 +10,8 @@ const store = new Vuex.Store({
         isAuth: false,
         nickname: '',
         score: null,
-
+        seennotification: false,
+        textnotification: ''
     },
     mutations:{
         auth(state, payload){
@@ -22,7 +23,7 @@ const store = new Vuex.Store({
             state.isAuth = false
             state.nickname = ''
             state.score = null
-        }
+        },
     }
 })
 
