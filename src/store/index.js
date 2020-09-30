@@ -24,6 +24,9 @@ const store = new Vuex.Store({
             state.nickname = ''
             state.score = null
         },
+        changescore(state, payload){
+            state.score = payload.score
+        }
     }
 })
 

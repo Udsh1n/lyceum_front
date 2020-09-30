@@ -1,13 +1,13 @@
 <template>
 <div>
-  <div class="container" v-if="infotest != ''">
+  <div class="container test" v-if="infotest != ''" >
     <div class="textwithquestion">
       {{infotest[questionnumber].question}}?
     </div>
     <div class="quiestion">
       <span>{{points}} очков</span>
       <div class="variantscoose" v-for="n in infotest[questionnumber].variants_set" :key="n.id">
-        <input type="radio" class="cards"  name="card" v-bind:value="n" >
+        <input type="radio" class="cards"  name="card" v-bind:value="n">
         <label>{{ n }}</label><br>
       </div>
     </div>
@@ -19,11 +19,18 @@
   <div v-else class="loading">
     Loading...
   </div>
+
+  <div class="endtest" v-if="endblock">
+    <p>Тест окончен!</p>
+    <p>Ваш результат {{ points }}</p>
+  </div>
 </div>
 </template>
 
 <script>
 import axios from 'axios'
+import store from "@/store";
+// import router from "@/routes";
 
 export default {
 name: "test",
@@ -31,7 +38,8 @@ name: "test",
     return{
       infotest: '',
       questionnumber: 0,
-      points: 0
+      points: 0,
+      endblock: false
     }
   },
   methods:{
@@ -48,20 +56,33 @@ name: "test",
             this.questionnumber += 1;
             document.querySelector('.cards').checked = false
           } else {
-            this.points -=15
             this.questionnumber += 1;
-            console.log('False')
           }
         }else{
-          if (document.querySelector('.cards:checked').value == truthvar.data.truthvariant){this.points +=15}else{this.points -=15}
-          alert('end')
-
+          if (document.querySelector('.cards:checked').value == truthvar.data.truthvariant){this.points +=15}
+          this.setscore()
+          store.commit('changescore', {score: this.points})
+          document.querySelector('.test').setAttribute('style', 'display: none')
+          this.endblock = true
         }
       }
       // console.log(document.querySelector('input[name="card"]:checked').value)
     },
     async gettestquestion(){
       this.infotest = await fetch('https://liceum1.herokuapp.com/liceum/testprocess').then(response => response.json())
+    },
+    async setscore(){
+      await fetch('https://liceum1.herokuapp.com/liceum/setscore/', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          score: this.points,
+          name: store.state.nickname
+          })
+        });
     }
   },
   created() {
