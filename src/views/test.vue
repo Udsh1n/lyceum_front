@@ -1,28 +1,31 @@
 <template>
 <div>
-  <div class="container test" v-if="infotest != ''" >
-    <div class="textwithquestion">
-      {{infotest[questionnumber].question}}?
-    </div>
-    <div class="quiestion">
-      <span>{{points}} очков</span>
-      <div class="variantscoose" v-for="n in infotest[questionnumber].variants_set" :key="n.id">
-        <input type="radio" class="cards"  name="card" v-bind:value="n">
-        <label>{{ n }}</label><br>
-      </div>
-    </div>
-    <div class="buttonsubmitask" v-on:click="checkquestion">
-      <div class="button">Подтвердить</div>
-    </div>
+<!--  <div class="container test" v-if="infotest != ''" >-->
+<!--    <div class="textwithquestion">-->
+<!--      {{infotest[questionnumber].question}}?-->
+<!--    </div>-->
+<!--    <div class="quiestion">-->
+<!--      <span>{{points}} очков</span>-->
+<!--      <div class="variantscoose" v-for="n in infotest[questionnumber].variants_set" :key="n.id">-->
+<!--        <input type="radio" class="cards"  name="card" v-bind:value="n">-->
+<!--        <label>{{ n }}</label><br>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="buttonsubmitask" v-on:click="checkquestion">-->
+<!--      <div class="button">Подтвердить</div>-->
+<!--    </div>-->
 
-  </div>
-  <div v-else class="loading">
-    Loading...
-  </div>
+<!--  </div>-->
+<!--  <div v-else class="loading">-->
+<!--    Loading...-->
+<!--  </div>-->
 
-  <div class="endtest" v-if="endblock">
-    <p>Тест окончен!</p>
-    <p>Ваш результат {{ points }}</p>
+<!--  <div class="endtest" v-if="endblock">-->
+<!--    <p>Тест окончен!</p>-->
+<!--    <p>Ваш результат {{ points }}</p>-->
+<!--  </div>-->
+  <div class="map" v-if="hors">
+        <maproad v-bind:testdata="infotest"/>
   </div>
 </div>
 </template>
@@ -31,6 +34,7 @@
 import axios from 'axios'
 import store from "@/store";
 // import router from "@/routes";
+import maproad from "../components/map";
 
 export default {
 name: "test",
@@ -39,7 +43,8 @@ name: "test",
       infotest: '',
       questionnumber: 0,
       points: 0,
-      endblock: false
+      endblock: false,
+      hors: true
     }
   },
   methods:{
@@ -87,6 +92,9 @@ name: "test",
   },
   created() {
     this.gettestquestion()
+  },
+  components:{
+    maproad,
   }
 }
 </script>

@@ -65,6 +65,7 @@
 <script>
 
 import router from "@/routes";
+import store from "@/store";
 
 export default {
 name: "mainpage",
@@ -73,7 +74,13 @@ name: "mainpage",
   },
   methods:{
     start(){
-      router.push('/test')
+      if (store.state.isAuth == true){
+       router.push('/test')
+      }else{
+        if (confirm('Сначала нужно авторизоваться. Перейти на страницу входа?')){
+          router.push('/singin')
+        }
+      }
     }
   }
 }
