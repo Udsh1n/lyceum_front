@@ -22,7 +22,8 @@ const routes=[
     {
         path: '/singup',
         name: 'CreateUser',
-        component: SingUp
+        component: SingUp,
+
     },
     {
         path: '/test',
@@ -32,7 +33,11 @@ const routes=[
     {
         path: '/admin',
         name: 'adminpanel',
-        component: admin
+        component: admin,
+        meta: {
+            title: 'AdminPanel',
+            forVistors: true
+        }
     }
 ]
 
