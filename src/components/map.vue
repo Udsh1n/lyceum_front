@@ -83,8 +83,8 @@ import store from "@/store";
           },
           Nexta(){
             if (this.$attrs.testdata.length-1 == this.currentquestion){
-              alert('End. Your score: '+store.state.score)
               store.commit('changescore', {score: this.totalscore})
+               alert('End. Your score: '+store.state.score)
               this.setscore()
             }else{
               this.currentquestion+=1
