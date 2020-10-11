@@ -84,7 +84,7 @@ name: "test",
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          score: this.points,
+          score: store.state.score,
           name: store.state.nickname
           })
         });

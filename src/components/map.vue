@@ -34,6 +34,7 @@
 
 <script>
 import axios from 'axios'
+import store from "@/store";
     export default {
         name: "map",
       data(){
@@ -82,7 +83,9 @@ import axios from 'axios'
           },
           Nexta(){
             if (this.$attrs.testdata.length-1 == this.currentquestion){
-              alert('the end')
+              alert('End. Your score: '+store.state.score)
+              store.commit('changescore', {score: this.totalscore})
+              this.setscore()
             }else{
               this.currentquestion+=1
               this.question = true
