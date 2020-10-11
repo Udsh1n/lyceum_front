@@ -4,6 +4,7 @@ import Home from '@/views/mainpage'
 import SingIn from "@/views/SingIn";
 import SingUp from "@/views/SingUp";
 import Test from "@/views/test"
+import admin from "@/views/admin";
 Vue.use(VueRouter)
 
 const routes=[
@@ -27,6 +28,11 @@ const routes=[
         path: '/test',
         name: 'test',
         component: Test
+    },
+    {
+        path: '/admin',
+        name: 'adminpanel',
+        component: admin
     }
 ]
 
