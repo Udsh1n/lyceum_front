@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import axios from 'axios'
-import store from "@/store";
+// import axios from 'axios'
+// import store from "@/store";
 // import router from "@/routes";
 import maproad from "../components/map";
 
@@ -48,47 +48,34 @@ name: "test",
     }
   },
   methods:{
-    async checkquestion(){
-      if (document.querySelector('.cards:checked') == null){
-        alert('Сделайте выбор')
-      }else{
-        let truthvar = await axios.get( 'https://liceum1.herokuapp.com/liceum/truth', {params: {id: this.questionnumber+1}});
-        console.log(document.querySelector('.cards:checked').value)
-        console.log(truthvar.data.truthvariant)
-        if (this.infotest[this.infotest.length-1].id-1 != this.questionnumber) {
-          if (document.querySelector('.cards:checked').value == truthvar.data.truthvariant) {
-            this.points +=15
-            this.questionnumber += 1;
-            document.querySelector('.cards').checked = false
-          } else {
-            this.questionnumber += 1;
-          }
-        }else{
-          if (document.querySelector('.cards:checked').value == truthvar.data.truthvariant){this.points +=15}
-          this.setscore()
-          store.commit('changescore', {score: this.points})
-          document.querySelector('.test').setAttribute('style', 'display: none')
-          this.endblock = true
-        }
-      }
-      // console.log(document.querySelector('input[name="card"]:checked').value)
-    },
+    // async checkquestion(){
+    //   if (document.querySelector('.cards:checked') == null){
+    //     alert('Сделайте выбор')
+    //   }else{
+    //     let truthvar = await axios.get( 'https://liceum1.herokuapp.com/liceum/truth', {params: {id: this.questionnumber+1}});
+    //     console.log(document.querySelector('.cards:checked').value)
+    //     console.log(truthvar.data.truthvariant)
+    //     if (this.infotest[this.infotest.length-1].id-1 != this.questionnumber) {
+    //       if (document.querySelector('.cards:checked').value == truthvar.data.truthvariant) {
+    //         this.points +=15
+    //         this.questionnumber += 1;
+    //         document.querySelector('.cards').checked = false
+    //       } else {
+    //         this.questionnumber += 1;
+    //       }
+    //     }else{
+    //       if (document.querySelector('.cards:checked').value == truthvar.data.truthvariant){this.points +=15}
+    //       this.setscore()
+    //       store.commit('changescore', {score: this.points})
+    //       document.querySelector('.test').setAttribute('style', 'display: none')
+    //       this.endblock = true
+    //     }
+    //   }
+    //   // console.log(document.querySelector('input[name="card"]:checked').value)
+    // },
     async gettestquestion(){
       this.infotest = await fetch('https://liceum1.herokuapp.com/liceum/testprocess').then(response => response.json())
     },
-    async setscore(){
-      await fetch('https://liceum1.herokuapp.com/liceum/setscore/', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          score: store.state.score,
-          name: store.state.nickname
-          })
-        });
-    }
   },
   created() {
     this.gettestquestion()

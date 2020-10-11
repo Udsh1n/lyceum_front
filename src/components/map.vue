@@ -84,12 +84,25 @@ import store from "@/store";
           Nexta(){
             if (this.$attrs.testdata.length-1 == this.currentquestion){
               store.commit('changescore', {score: this.totalscore})
-               alert('End. Your score: '+store.state.score)
+              alert('End. Your score: '+store.state.score)
               this.setscore()
             }else{
               this.currentquestion+=1
               this.question = true
             }
+        },
+        async setscore(){
+          await fetch('https://liceum1.herokuapp.com/liceum/setscore/', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              score: store.state.score,
+              name: store.state.nickname
+              })
+            });
         }
       }
     }
