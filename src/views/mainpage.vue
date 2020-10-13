@@ -27,32 +27,32 @@
           <div class="block">
             <div class="place" style="border-top: 2px solid #A6A6A6; border-radius: 20px 20px 0 0;">
               <div class="imageplace">
-                <img src="img/goldkorona.svg" class="korona" alt="">
+                <img src="../assets/goldkorona.svg" class="korona" alt="">
               </div>
-                <span class="nickname">Udsh1n</span>
+                <span class="nickname">{{ top.data.list[0] }}</span>
             </div>
             <div class="place">
               <div class="imageplace">
-                <img src="img/silverkorona.svg" style="fill: #C0C0C0" class="korona" alt="">
+                <img src="../assets/silverkorona.svg" style="fill: #C0C0C0" class="korona" alt="">
               </div>
-              <span class="nickname">whoami</span>
+              <span class="nickname">{{ top.data.list[1] }}</span>
             </div>
             <div class="place">
               <div class="imageplace">
-                <img src="img/bronzekorona.svg" class="korona" alt="">
+                <img src="../assets/bronzekorona.svg" class="korona" alt="">
               </div>
-              <span class="nickname">whoami</span>
+              <span class="nickname">{{ top.data.list[2] }}</span>
             </div>
-            <div class="place"><div class="placenumber"><span class="number">#4</span></div><span class="nickname">whoami</span></div>
-            <div class="place"><div class="placenumber"><span class="number">#5</span></div><span class="nickname">whoami</span></div>
-            <div class="place"><div class="placenumber"><span class="number">#6</span></div><span class="nickname">whoami</span></div>
-            <div class="place"><div class="placenumber"><span class="number">#7</span></div><span class="nickname">whoami</span></div>
-            <div class="place"><div class="placenumber"><span class="number">#8</span></div><span class="nickname">whoami</span></div>
-            <div class="place"><div class="placenumber"><span class="number">#9</span></div><span class="nickname">whoami</span></div>
-            <div class="place"><div class="placenumber"><span class="number">#10</span></div><span class="nickname">whoami</span></div>
+            <div class="place"><div class="placenumber"><span class="number">#4</span></div><span class="nickname">{{ top.data.list[3] }}</span></div>
+            <div class="place"><div class="placenumber"><span class="number">#5</span></div><span class="nickname">{{ top.data.list[4] }}</span></div>
+            <div class="place"><div class="placenumber"><span class="number">#6</span></div><span class="nickname">{{ top.data.list[5] }}</span></div>
+            <div class="place"><div class="placenumber"><span class="number">#7</span></div><span class="nickname">{{ top.data.list[6] }}</span></div>
+            <div class="place"><div class="placenumber"><span class="number">#8</span></div><span class="nickname">{{ top.data.list[7] }}</span></div>
+            <div class="place"><div class="placenumber"><span class="number">#9</span></div><span class="nickname">{{ top.data.list[8] }}</span></div>
+            <div class="place"><div class="placenumber"><span class="number">#10</span></div><span class="nickname">{{ top.data.list[9] }}</span></div>
 
 
-            <div class="place" style="border-radius: 0 0 20px 20px;"><div class="placenumber"><span class="number">#153</span></div><span class="nickname">whoami</span></div>
+            <div class="place" style="border-radius: 0 0 20px 20px;"><div class="placenumber"><span class="number">#{{ top.data.list[10]+1 }}вы:</span></div><span class="nickname">{{ nick }}</span></div>
           </div>
         </div>
       </div>
@@ -63,14 +63,20 @@
 </template>
 
 <script>
-
+// let truthvar = await axios.get( 'https://liceum1.herokuapp.com/liceum/truth', {params: {id: this.questionnumber+1}});
 import router from "@/routes";
 import store from "@/store";
-
+import axios from 'axios'
 export default {
 name: "mainpage",
-  components:{
-
+  data(){
+    return{
+      top: [],
+      nick: store.state.nickname
+    }
+  },
+  created(){
+    this.topplayers()
   },
   methods:{
     start(){
@@ -81,6 +87,11 @@ name: "mainpage",
           router.push('/singin')
         }
       }
+    },
+    async topplayers(){
+      let topplayer = await axios.get( 'https://liceum1.herokuapp.com/liceum/getrating', {params: {'variant': 'all', 'nickname': 'Elisha'}});
+      this.top = topplayer
+      console.log(topplayer)
     }
   }
 }

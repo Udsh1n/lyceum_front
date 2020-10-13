@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="map">
-          <p class="titlemap"><span>KAPTA </span></p>
+          <p class="titlemap"><span>KAPTA</span></p>
 
           <div class="mapcontent">
             <div class="mapppoints">
@@ -16,8 +16,8 @@
             <div class="questionvariatsanswer" v-if="question" >
               <div v-for="i in 4" :key="i.id" class="answerchoice" v-on:click="ChooseVariant(i-1)">{{ $attrs.testdata[currentquestion].variants_set[i-1] }}</div>
             </div>
-            <div v-if="!question" class="answerimage" v-on:click="OpenGoogleMaps(truthVar.data.pointgooglemap)">
-              {{ truthVar.data.truthvariant }}
+            <div v-if="!question" class="answerimage" v-on:click="OpenGoogleMaps($attrs.testdata[currentquestion].linkongooglemaps)">
+              {{ $attrs.testdata[currentquestion].truth }}
             </div>
             <div v-if="!question" class="answer">
                 <span v-if="ifright == true"><span class="uright truth animate__animated animate__shakeY" >&#10004;</span><span style="text-align: center; width: 100%; display: block">+15</span></span>
@@ -33,8 +33,8 @@
 </template>
 
 <script>
-import axios from 'axios'
 import store from "@/store";
+import router from "@/routes";
     export default {
         name: "map",
       data(){
@@ -43,7 +43,6 @@ import store from "@/store";
             ifright: false,
             currentquestion: 0,
             totalscore: 0,
-            truthVar: '',
             answerhistory: []
           }
       },
@@ -59,12 +58,8 @@ import store from "@/store";
             window.open(link, '_blank');
           },
           async ChooseVariant(number){
-            let truthvar = await axios.get( 'https://liceum1.herokuapp.com/liceum/truth', {params: {id: this.currentquestion+1}});
-            let truthvariant = truthvar.data.truthvariant
             let choosevar = this.$attrs.testdata[this.currentquestion].variants_set[number]
-            this.truthVar=truthvar
-            // document.querySelector('.mappoint').classList.add('mappointborder')
-            if (truthvariant == choosevar){
+            if (this.$attrs.testdata[this.currentquestion].truth == choosevar){
               console.log('Right')
               this.totalscore = this.totalscore+15
               this.question = false
@@ -84,8 +79,13 @@ import store from "@/store";
           Nexta(){
             if (this.$attrs.testdata.length-1 == this.currentquestion){
               store.commit('changescore', {score: this.totalscore})
-              alert('End. Your score: '+store.state.score)
-              this.setscore()
+              if(confirm('End. Your score: '+store.state.score + '\nСохранить результат?')){
+               this.setscore();
+               router.push('/')
+              }else{
+                // document.getElementsByClassName('nextbutton').value = 'Сохранить результат'
+                document.querySelector('.nextbutton').innerHTML = 'Сохранить'
+              }
             }else{
               this.currentquestion+=1
               this.question = true
