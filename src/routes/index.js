@@ -5,6 +5,7 @@ import SingIn from "@/views/SingIn";
 import SingUp from "@/views/SingUp";
 import Test from "@/views/test"
 import admin from "@/views/admin";
+import MapBelarus from "@/views/MapBelarus";
 Vue.use(VueRouter)
 
 const routes=[
@@ -34,11 +35,12 @@ const routes=[
         path: '/admin',
         name: 'adminpanel',
         component: admin,
-        meta: {
-            title: 'AdminPanel',
-            forVistors: true
-        }
-    }
+    },
+    {
+        path: '/mapbelarus',
+        name: 'mapbelarus',
+        component: MapBelarus,
+    },
 ]
 
 const router = new VueRouter({
