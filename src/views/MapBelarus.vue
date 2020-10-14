@@ -2,42 +2,30 @@
 <div>
   <div class="mapdiv">
     <div id="fline">
-      <i  class=" mapmarker fas fa-map-marker" data-toggle="modal" data-target="#exampleModalLong"  v-on:click="clickonmarker"></i>
+      <i  class="mapmarker fas fa-map-marker"   v-on:click="clickonmarker(0)"></i>
+      <i  class="mapmarker fas fa-map-marker"   v-on:click="clickonmarker(1)"></i>
+      <i  class="mapmarker fas fa-map-marker"   v-on:click="clickonmarker(2)"></i>
+    </div>
+    <div class="info" v-if="seen">
+      {{ textinfo }}
     </div>
   </div>
-  <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
-  Запустить модальное окно
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p id="bodytextmodal">...</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
 </div>
 </template>
-
 <script>
 export default {
 name: "MapBelarus",
+  data(){
+    return{
+      infotest: [],
+      seen: false,
+      textinfo: '',
+      currentnum: null
+    }
+  },
   mounted(){
-    this.get_size_and_paddings_elements()
+    this.get_size_and_paddings_elements(),
+    this.gettestquestion()
   },
   methods:{
     get_size_and_paddings_elements(){
@@ -50,10 +38,19 @@ name: "MapBelarus",
         idmarker +=1
       }
     },
-    clickonmarker(){
-      console.log('clicked')
-      document.getElementById('#myModal').modal('show')
-      document.getElementById('bodytextmodal').innerHTML = 'hello'
+    async gettestquestion(){
+      this.infotest = await fetch('https://liceum1.herokuapp.com/liceum/testprocess').then(response => response.json())
+    },
+
+    clickonmarker(num){
+      if(this.currentnum == num){
+        this.seen =!this.seen
+      }else{
+        this.currentnum = num
+        this.seen = true
+      }
+      this.textinfo = 'Контент для  '+ Math.round(num+1) +' маркера'
+      console.log(num)
     },
   }
 
@@ -96,4 +93,14 @@ name: "MapBelarus",
   justify-content: space-around;
   align-items: flex-end;
 }
+.info{
+  display: flex;
+  position: absolute;
+  background-color: white;
+  border: 1px solid #1c1c1c;
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 45vh;
+}
+
 </style>
