@@ -2,9 +2,7 @@
 <div>
   <div class="mapdiv">
     <div id="fline">
-      <i  class="mapmarker fas fa-map-marker"   v-on:click="clickonmarker(0)"></i>
-      <i  class="mapmarker fas fa-map-marker"   v-on:click="clickonmarker(1)"></i>
-      <i  class="mapmarker fas fa-map-marker"   v-on:click="clickonmarker(2)"></i>
+      <i v-for="n in infotest" :key="n.id" class="mapmarker fas fa-map-marker"   v-on:click="clickonmarker(n.id-1)"></i>
     </div>
     <div class="info" v-if="seen">
       {{ textinfo }}
@@ -24,9 +22,12 @@ name: "MapBelarus",
     }
   },
   mounted(){
-    this.get_size_and_paddings_elements(),
+    this.startgetsizefunc(),
     this.gettestquestion()
   },
+  // updated() {
+  //   this.get_size_and_paddings_elements()
+  // },
   methods:{
     get_size_and_paddings_elements(){
       let intElemOffsetHeight = document.getElementById('fline');
@@ -37,6 +38,9 @@ name: "MapBelarus",
         markers[idmarker].setAttribute('style', 'padding-bottom: '+ paddingtop+'px; width:'+intElemOffsetHeight.clientWidth/markers.length+'px')
         idmarker +=1
       }
+    },
+    startgetsizefunc(){
+      setTimeout(() => {  this.get_size_and_paddings_elements() }, 1000);
     },
     async gettestquestion(){
       this.infotest = await fetch('https://liceum1.herokuapp.com/liceum/testprocess').then(response => response.json())
@@ -49,7 +53,8 @@ name: "MapBelarus",
         this.currentnum = num
         this.seen = true
       }
-      this.textinfo = 'Контент для  '+ Math.round(num+1) +' маркера'
+      this.infotest[num].question
+      this.textinfo = this.infotest[num].question
       console.log(num)
     },
   }

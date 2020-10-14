@@ -59,10 +59,6 @@
     </div>
   </section>
 
-  <section>
-    <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A8e0fafd1dc609402912ff0a1c40baca83569141b92fd0d8a372aa66bb9923d43&amp;source=constructor" width="90%" height="500" frameborder="0"></iframe>
-  </section>
-
 </div>
 </template>
 
