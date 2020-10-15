@@ -28,7 +28,7 @@
       <th scope="row">{{ n.numonlist }}</th>
       <td class="questiontd">{{n.question}}</td>
       <td><p class="varianttruthanswers" v v-for="g in n.variants_set" :key="g.id" v-on:click="changetruthvariant(n.id, g)" ><span v-if="g == n.truth" style="color: red">{{ g }}</span><span v-else>{{g}}</span></p></td>
-      <td><input class="mapslink" type="text" :value="n.linkongooglemaps" v-on:change="changelinkongooglemaps(n.id)"></td>
+      <td><input class="mapslink" type="text" :value="n.linkongooglemaps" v-on:change="changelinkongooglemaps(n.id, n.numonlist)"></td>
       <td>{{ n.truthvariantimage }}</td>
     </tr>
 
@@ -65,8 +65,8 @@ name: "admin",
     async gettestquestion(){
       this.infotest = await fetch('https://liceum1.herokuapp.com/liceum/testprocess').then(response => response.json())
     },
-    async changelinkongooglemaps(id){
-      // console.log('Try change google maps link to '+id+' question', document.querySelectorAll('.mapslink')[id-1].value)
+    async changelinkongooglemaps(id,number){
+      console.log('Try change google maps link to '+number+' question', document.querySelectorAll('.mapslink')[number-1].value)
       await fetch('https://liceum1.herokuapp.com/liceum/changegooglemapslink/', {
         method: 'POST',
         headers:{
@@ -75,7 +75,7 @@ name: "admin",
         },
         body: JSON.stringify({
           'id': id,
-          'link': document.querySelectorAll('.mapslink')[id-1].value,
+          'link': document.querySelectorAll('.mapslink')[number-1].value,
         })
       })
     },
