@@ -71,6 +71,8 @@ name: "MapBelarus",
   align-self: center;
   justify-content: center;
   background-image: url("../assets/old-paper.jpg");
+  box-shadow: 0 0 15px 5px #343434;
+  margin-top: 15px;
 }
 .mapmarker{
   color: grey;

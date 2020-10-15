@@ -20,14 +20,16 @@
       <th scope="col">Вопрос</th>
       <th scope="col">Ответ</th>
       <th scope="col">Ссылка на Google Maps(только для правильного ответа)</th>
+       <th scope="col">Ссылка на изображение(только для правильного ответа)</th>
     </tr>
   </thead>
   <tbody>
     <tr v-for="n in infotest" :key="n.id">
-      <th scope="row">{{ n.id }}</th>
-      <td>{{ n.question }}</td>
-      <td><p v-for="g in n.variants_set" :key="g.id">{{ g }}</p></td>
-      <td>{{ n.linkongooglemaps }}</td>
+      <th scope="row">{{ n.numonlist }}</th>
+      <td class="questiontd">{{n.question}}</td>
+      <td><p class="varianttruthanswers" v v-for="g in n.variants_set" :key="g.id" v-on:click="changetruthvariant(n.id, g)" ><span v-if="g == n.truth" style="color: red">{{ g }}</span><span v-else>{{g}}</span></p></td>
+      <td><input class="mapslink" type="text" :value="n.linkongooglemaps" v-on:change="changelinkongooglemaps(n.id)"></td>
+      <td>{{ n.truthvariantimage }}</td>
     </tr>
 
   </tbody>
@@ -41,7 +43,7 @@ export default {
 name: "admin",
   data(){
     return{
-      auth: false,
+      auth: true,
       infotest: []
     }
   },
@@ -63,6 +65,35 @@ name: "admin",
     async gettestquestion(){
       this.infotest = await fetch('https://liceum1.herokuapp.com/liceum/testprocess').then(response => response.json())
     },
+    async changelinkongooglemaps(id){
+      // console.log('Try change google maps link to '+id+' question', document.querySelectorAll('.mapslink')[id-1].value)
+      await fetch('https://liceum1.herokuapp.com/liceum/changegooglemapslink/', {
+        method: 'POST',
+        headers:{
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          'id': id,
+          'link': document.querySelectorAll('.mapslink')[id-1].value,
+        })
+      })
+    },
+    async changetruthvariant(numquestion, strvar){
+      await fetch('https://liceum1.herokuapp.com/liceum/changetruthvariant/', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          questionnumber: numquestion,
+          variantstring: strvar
+        })
+      })
+
+      this.gettestquestion()
+    }
   }
 }
 </script>
@@ -103,26 +134,7 @@ name: "admin",
   cursor: pointer;
   transition: .1s;
 }
-.addquestion{
-  display: flex;
-  flex-direction: column;
-  font-size: 2em;
-}
-.addquestion p {
-  align-self: center;
-}
-.add{
-  font-size: 1.3rem;
-  margin-left: 30px;
-}
-.variant{
-  margin-top: 50px;
-  margin-left: 30px;
-    font-size: 1.1rem;
-}
-.push{
-  color: white;
-  margin-left: 30px;
-  margin-top: 20px;
+.varianttruthanswers{
+  cursor: pointer;
 }
 </style>

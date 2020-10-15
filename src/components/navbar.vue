@@ -6,7 +6,9 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav" >
-
+      <li class="nav-item" >
+        <router-link class="nav-link" to="/mapbelarus"  v-if="!auth">Карта</router-link>
+      </li>
       <li class="nav-item" >
         <router-link class="nav-link" to="/singin"  v-if="!auth">Вход</router-link>
       </li>

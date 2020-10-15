@@ -16,7 +16,7 @@
             <div class="questionvariatsanswer" v-if="question" >
               <div v-for="i in 4" :key="i.id" class="answerchoice" v-on:click="ChooseVariant(i-1)">{{ $attrs.testdata[currentquestion].variants_set[i-1] }}</div>
             </div>
-            <div v-if="!question" class="answerimage" v-on:click="OpenGoogleMaps($attrs.testdata[currentquestion].linkongooglemaps)">
+            <div v-bind:style="{ backgroundImage: 'url(' + $attrs.testdata[currentquestion].truthvariantimage  + ')' }" v-if="!question" class="answerimage" v-on:click="OpenGoogleMaps($attrs.testdata[currentquestion].linkongooglemaps)">
               {{ $attrs.testdata[currentquestion].truth }}
             </div>
             <div v-if="!question" class="answer">
@@ -43,7 +43,8 @@ import router from "@/routes";
             ifright: false,
             currentquestion: 0,
             totalscore: 0,
-            answerhistory: []
+            answerhistory: [],
+
           }
       },
       mounted() {
@@ -156,18 +157,7 @@ import router from "@/routes";
   border: 2px solid white;
   border-radius: 50%;
 }
-/*.mappoint:nth-child(1){*/
-/*  background-color: green;*/
-/*}*/
-/*.mappoint:nth-child(2){*/
-/*  background-color: red;*/
-/*}*/
-/*.mappoint:nth-child(3){*/
-/*  background-color: red;*/
-/*}*/
-/*.mappoint:nth-child(4){*/
-/*  border: 2px solid white;*/
-/*}*/
+
 .mappoint span{
   width: 100%;
   height: 100%;
@@ -188,7 +178,7 @@ import router from "@/routes";
 .answerimage{
   width: 90%;
   height: 80%;
-  background-image: url("../assets/minsk.jpg");
+  /*background-image: url("../assets/minsk.jpg");*/
   background-position: top;
   background-size: cover;
   display: flex;
