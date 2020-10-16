@@ -26,15 +26,37 @@
   <tbody>
     <tr v-for="n in infotest" :key="n.id">
       <th scope="row">{{ n.numonlist }}</th>
-      <td class="questiontd">{{n.question}}</td>
-      <td><p class="varianttruthanswers" v v-for="g in n.variants_set" :key="g.id" v-on:click="changetruthvariant(n.id, g)" ><span v-if="g == n.truth" style="color: red">{{ g }}</span><span v-else>{{g}}</span></p></td>
-      <td><input class="mapslink" type="text" :value="n.linkongooglemaps" v-on:change="changelinkongooglemaps(n.id, n.numonlist)"></td>
-      <td>{{ n.truthvariantimage }}</td>
-    </tr>
 
+      <td class="questiontd">
+        <span class="questionspan">{{n.question}}</span>
+        <span class="edit" v-on:click="editquestion(n.id, n.numonlist, 'toedit')">
+          <i v-if="!editquestionstatus" class="fas fa-pen-square"></i>
+        </span>
+      </td>
+
+      <td>
+        <p class="varianttruthanswers" v v-for="g in n.variants_set" :key="g.id" v-on:click="changetruthvariant(n.id, g)" >
+          <span v-if="g == n.truth" style="color: red">{{ g }}</span>
+          <span v-else>{{g}}</span>
+        </p>
+      </td>
+
+      <td>
+        <input class="mapslink" type="text" :value="n.linkongooglemaps" v-on:change="changelinkongooglemaps(n.id, n.numonlist)">
+      </td>
+
+      <td><input class="answerimagelink" type="text" :value="n.truthvariantimage" v-on:change="changelinkontruthvariantimage(n.id, n.numonlist)"></td>
+    </tr>
   </tbody>
 </table>
   </div>
+
+  <div class="alertbox" v-if="alertseen">
+    <div class="alert animate__animated animate__backInRight">
+       {{alerttext}}
+    </div>
+  </div>
+
 </div>
 </template>
 
@@ -44,7 +66,10 @@ name: "admin",
   data(){
     return{
       auth: true,
-      infotest: []
+      infotest: [],
+      editquestionstatus: false,
+      alerttext:'Обновлено',
+      alertseen: false
     }
   },
   created() {
@@ -78,6 +103,24 @@ name: "admin",
           'link': document.querySelectorAll('.mapslink')[number-1].value,
         })
       })
+      this.gettestquestion()
+      this.alertfunc('Ссылка обновлена')
+    },
+    async changelinkontruthvariantimage(id,number){
+      console.log('Try change truth answer link to '+number+' question', document.querySelectorAll('.mapslink')[number-1].value)
+      await fetch('https://liceum1.herokuapp.com/liceum/changetruthanswerimaglink/', {
+        method: 'POST',
+        headers:{
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          'id': id,
+          'link': document.querySelectorAll('.answerimagelink')[number-1].value,
+        })
+      })
+      this.gettestquestion()
+      this.alertfunc('Ссылка обновлена')
     },
     async changetruthvariant(numquestion, strvar){
       await fetch('https://liceum1.herokuapp.com/liceum/changetruthvariant/', {
@@ -91,8 +134,46 @@ name: "admin",
           variantstring: strvar
         })
       })
-
+      this.alertfunc('Сменено на '+ strvar)
       this.gettestquestion()
+    },
+    async editquestion(id, num, vars){
+      console.log('Try change '+ num+' variants with id: '+id)
+      if (vars == 'toedit'){
+        let question = this.infotest[num-1].question
+        document.querySelectorAll('.questionspan')[num-1].innerHTML = '<input class="changedinput" type="text" value="'+question+'">'
+        let localThis = this
+        document.querySelectorAll('.questionspan')[num-1].addEventListener("change", async function() {
+          console.log(document.querySelectorAll('.changedinput')[0].value)
+          let newquestion = document.querySelectorAll('.changedinput')[0].value
+        await fetch('https://liceum1.herokuapp.com/liceum/changequestion/', {
+          method: 'POST',
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: id,
+            num: num,
+            newquestion: newquestion
+          })
+        })
+          localThis.alertfunc(newquestion)
+          localThis.gettestquestion()
+        })
+      }
+    },
+
+    alertfunc(mess){
+      this.alerttext = mess
+      this.alertseen = true
+      setTimeout(this.hidealert, 7000)
+    },
+    hidealert(){
+      let element = document.querySelector('.alert')
+      element.classList.remove('animate__backInRight')
+      element.classList.add('animate__backOutRight')
+      this.alertseen = false
     }
   }
 }
@@ -136,5 +217,26 @@ name: "admin",
 }
 .varianttruthanswers{
   cursor: pointer;
+}
+.edit{
+  color: #1c1c1c;
+}
+.edit:hover{
+  color: red;
+  cursor: pointer;
+}
+.alertbox{
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+.alert{
+  width: 20%;
+  background-color: green;
+  border: 2px solid #1c1c1c;
+  color: white;
+  font-size: 1.2vw;
+  opacity: 0.8;
 }
 </style>
