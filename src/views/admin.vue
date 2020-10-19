@@ -20,7 +20,7 @@
       <th scope="col">Вопрос</th>
       <th scope="col">Ответ</th>
       <th scope="col">Ссылка на Google Maps(только для правильного ответа)</th>
-       <th scope="col">Ссылка на изображение(только для правильного ответа)</th>
+      <th scope="col">Ссылка на изображение(только для правильного ответа)</th>
     </tr>
   </thead>
   <tbody>
@@ -46,6 +46,7 @@
       </td>
 
       <td><input class="answerimagelink" type="text" :value="n.truthvariantimage" v-on:change="changelinkontruthvariantimage(n.id, n.numonlist)"></td>
+      <td><i class="deleteicon fas fa-trash" v-on:click="deletequestion(n.id, n.numonlist)"></i></td>
     </tr>
   </tbody>
 </table>
@@ -163,11 +164,32 @@ name: "admin",
         })
       }
     },
-
+    async deletequestion(id, num){
+      const rawResponse = await fetch('http://127.0.0.1:8000/liceum/removequestion/', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            'id': id,
+            'num': num,
+        })
+      });
+      const content = await rawResponse.json();
+      this.gettestquestion()
+      if (content.code == 200){
+        this.alertfunc('Успешно удалено')
+      }else if (content.code == 0){
+        this.alertfunc('Ошибка, возможно уже удалено')
+      }else {
+        this.alertfunc('Неизвестная ошибка')
+      }
+    },
     alertfunc(mess){
       this.alerttext = mess
       this.alertseen = true
-      setTimeout(this.hidealert, 7000)
+      setTimeout(this.hidealert, 2000)
     },
     hidealert(){
       let element = document.querySelector('.alert')
@@ -238,5 +260,9 @@ name: "admin",
   color: white;
   font-size: 1.2vw;
   opacity: 0.8;
+}
+.deleteicon:hover{
+  color: red;
+  cursor: pointer;
 }
 </style>
