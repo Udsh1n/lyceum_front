@@ -165,7 +165,7 @@ name: "admin",
       }
     },
     async deletequestion(id, num){
-      const rawResponse = await fetch('http://127.0.0.1:8000/liceum/removequestion/', {
+      const rawResponse = await fetch('https://liceum1.herokuapp.com/liceum/removequestion/', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
