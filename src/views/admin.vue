@@ -48,8 +48,28 @@
       <td><input class="answerimagelink" type="text" :value="n.truthvariantimage" v-on:change="changelinkontruthvariantimage(n.id, n.numonlist)"></td>
       <td><i class="deleteicon fas fa-trash" v-on:click="deletequestion(n.id, n.numonlist)"></i></td>
     </tr>
+
+  <tr v-if="adding">
+      <th scope="row">N/A</th>
+      <td>
+        <input  id="addquestioninput" type="text" placeholder="Вопрос">
+      </td>
+      <td>
+        <input  class="addvariantinput" type="text" placeholder="#1"><br/>
+        <input  class="addvariantinput" type="text" placeholder="#2"><br/>
+        <input  class="addvariantinput" type="text" placeholder="#3"><br/>
+        <input  class="addvariantinput" type="text" placeholder="#4">
+      </td>
+    <td><input  id="addgooglemapslink" type="text" placeholder="Google maps"></td>
+    <td><input  id="addimagelink" type="text" placeholder="Link on image"></td>
+    </tr>
+
   </tbody>
 </table>
+      <hr/>
+    <div class="addquestion" v-on:click="addquestion">
+      {{ textaddbutton }}
+    </div>
   </div>
 
   <div class="alertbox" v-if="alertseen">
@@ -70,7 +90,9 @@ name: "admin",
       infotest: [],
       editquestionstatus: false,
       alerttext:'Обновлено',
-      alertseen: false
+      alertseen: false,
+      adding: false,
+      textaddbutton: 'ADD'
     }
   },
   created() {
@@ -186,10 +208,57 @@ name: "admin",
         this.alertfunc('Неизвестная ошибка')
       }
     },
+    async addquestion(){
+      if (this.adding == false){
+        this.adding = true
+        this.textaddbutton = 'Save'
+      }else{
+        // question
+        let getquestiontext = document.getElementById('addquestioninput').value
+        // Variants
+        let listvariants = []
+        let getquestionvariants = document.querySelectorAll('.addvariantinput')
+        let i;
+        for (i = 0; i < 4; i++){
+          listvariants.push(getquestionvariants[i].value)
+        }
+      //  Link on Google maps
+        let linkmaps = document.getElementById('addgooglemapslink').value
+      //  link on image
+        let linkimage = document.getElementById('addimagelink').value
+      console.log(listvariants)
+        console.log('try save', getquestiontext, getquestionvariants, linkmaps, linkimage)
+        if (getquestiontext != '' && listvariants[0] !='' && listvariants[1] !='' && listvariants[2] != '' && listvariants[3] != '' && linkimage !=''){
+          let body = JSON.stringify({
+            questiontext: getquestiontext,
+            variants: listvariants,
+            linkongooglemaps: linkmaps,
+            linkonimage: linkimage
+          })
+          //Request
+        const rawResponse = await fetch('https://liceum1.herokuapp.com/liceum/addquestion/', {
+          method: 'POST',
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+          },
+          body: body
+        });
+        const content = await rawResponse.json();
+        this.adding = false
+        this.textaddbutton = 'ADD'
+        this.gettestquestion()
+        this.alertfunc('Успешно создано')
+        console.log(content)
+        }else{
+          this.alertfunc('Все поля обязательный кроме ссылки на Google maps')
+        }
+      }
+    },
     alertfunc(mess){
       this.alerttext = mess
       this.alertseen = true
-      setTimeout(this.hidealert, 2000)
+      setTimeout(this.hidealert, 4000)
     },
     hidealert(){
       let element = document.querySelector('.alert')
@@ -248,7 +317,7 @@ name: "admin",
   cursor: pointer;
 }
 .alertbox{
-  position: absolute;
+  position: fixed;
   width: 100%;
   display: flex;
   justify-content: flex-end;
@@ -263,6 +332,24 @@ name: "admin",
 }
 .deleteicon:hover{
   color: red;
+  cursor: pointer;
+}
+.addquestion{
+  width: 20%;
+  margin-left: 5%;
+  height: 80px;
+  border: 2px solid #1c1c1c;
+  color: #1c1c1c;
+  transition: .16s;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.addquestion:hover{
+  background-color: #1c1c1c;
+  transition: .16s;
+  color: white;
   cursor: pointer;
 }
 </style>
