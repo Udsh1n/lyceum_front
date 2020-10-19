@@ -86,7 +86,7 @@ export default {
 name: "admin",
   data(){
     return{
-      auth: true,
+      auth: false,
       infotest: [],
       editquestionstatus: false,
       alerttext:'Обновлено',
